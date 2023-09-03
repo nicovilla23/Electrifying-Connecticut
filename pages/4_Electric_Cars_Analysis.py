@@ -10,6 +10,9 @@ from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 import plotly.express as px
 import plost
+import matplotlib.pyplot as plt
+import squarify
+
 st.title('Electrifying Connecticut') 
 cars = pd.read_csv('Clean_Electric_Vehicle_Population_Data.csv')
 price = pd.read_csv('Cars_Price_Clean.csv')
@@ -24,13 +27,12 @@ t_counts= pd.DataFrame(cars.groupby('model_year')['electric_vehicle_type'].value
 
 add_selectbox = st.sidebar.selectbox(
     "Choose the analysis",
-    ('Electric vs Plug-in Hybrids'
-     ,'Electric Car Tendencies',
-    'Cars Registered by make',
-    'Amount of models per make',
-    'Prices per make',
-    'Most popular models',
-    'Electric Range Tendency'))
+    ('Electric vs Plug-in Hybrids',
+     'Electric Car Tendencies',
+     'Prices per make',
+     'Electric Range Tendency',
+     'Most popular models',
+     'Clean Alternative Fuel Vehicle Eligibility'))
 if add_selectbox == 'Electric vs Plug-in Hybrids':
             st.markdown('### Metrics')
             col1, col2, col3, col4 = st.columns(4)
@@ -74,7 +76,7 @@ if add_selectbox == 'Electric Car Tendencies':
     E_21=len(cars[(cars['model_year']<= 2021) & (cars['electric_vehicle_type']== 'Electric')])
     E_LY = len(cars[(cars['model_year']<= 2022) & (cars['model_year'] >= 2021) & (cars['electric_vehicle_type']== 'Electric') ])
     P_21=len(cars[(cars['model_year']<= 2021) & (cars['electric_vehicle_type']== 'Plug-in Hybrid')])
-    P_LY= len(cars[(cars['model_year']<= 2022) & (cars['model_year'] >= 2021) & (cars['electric_vehicle_type']== 'Plug-in Hybrid') ]) 
+    P_LY= len(cars[(cars['model_year']<= 2022) & (cars['model_year'] >= 2021) & (cars['electric_vehicle_type']== 'Plug-in Hybrid')]) 
     
     with colo1:
         
@@ -95,8 +97,7 @@ if add_selectbox == 'Electric Car Tendencies':
     st.markdown('### Area Chart')
     plost.area_chart(data=data, x='model_year', y='Count', color='electric_vehicle_type')
 
-    
-    
+       
 if add_selectbox == 'Prices per make':
     st.markdown('### Metrics')
     colm1,colm2,colm3 = st.columns(3)
@@ -108,19 +109,117 @@ if add_selectbox == 'Prices per make':
         st.metric(label='Maximum Price', value = f'{(price.price.max()):.2f}$')
     summary = price.groupby('Make').agg(mean_price=('price', 'mean'), min_price=('price', 'min'), max_price=('price', 'max')).reset_index()
     st.markdown('### Stacked Bar Chart')
-    plost.bar_chart(
+    chart = plost.bar_chart(
     data=summary,
     bar='Make',
     value=['mean_price', 'min_price', 'max_price'],
     group=True)
+if add_selectbox == 'Most popular models':    
+    coln1, coln2 = st.columns((3,7))
+
+    with coln1:
+        copium = st.selectbox('Select model', cars.model.unique())
+
+    with coln2:
+        if copium in cars['model'].unique():
+            st.metric(label='CAFV', value=cars.loc[cars['model'] == copium, 'cafv_eligibilaty'].values[0])
+
+    coln3, coln4, coln5 = st.columns(3)
+
+    with coln3:
+        if copium in cars['model'].unique():
+            st.metric(label='Electric Range', value=f"{cars.loc[cars['model'] == copium, 'electric_range'].values[0]} miles")
+
+    with coln4:
+        if copium in cars['model'].unique():
+            st.metric(label='Make', value=cars.loc[cars['model'] == copium, 'make'].values[0])
+
+    with coln5:
+        if copium in cars['model'].unique():
+            st.metric(label='Type', value=cars.loc[cars['model'] == copium, 'electric_vehicle_type'].values[0])
+        lep = cars.groupby('model')['city'].count()
+    lop = pd.DataFrame({'labels':lep.index,'size': lep.values})
+    fig = px.treemap(lop, path=['labels'], values='size')
+    fig.update_layout(
+    width=800,  
+    height=600,
+    title='Most Popular Models')
+    st.plotly_chart(fig)
+if add_selectbox == 'Electric Range Tendency':
+    co1, co2, co3, co4 = st.columns(4)
+    E_11= cars[(cars['model_year']== 2011) & (cars['electric_vehicle_type']== 'Electric')]['electric_range'].mean()
+    E_De = cars[(cars['model_year']== 2020) & (cars['electric_vehicle_type']== 'Electric')]['electric_range'].mean()
+    P_11=cars[(cars['model_year']== 2011) & (cars['electric_vehicle_type']== 'Plug-in Hybrid')]['electric_range'].mean()
+    P_De= cars[(cars['model_year']== 2020) & (cars['electric_vehicle_type']== 'Plug-in Hybrid')]['electric_range'].mean()  
+    with co1:
+        st.markdown('#### Electric')
+        st.metric(label = 'In 2011', value = f'{(E_11):.2f} mi')
+    with co2:
+        st.markdown('#### Electric')
+        st.metric(label = 'in 2020', value = f'{(E_De):.2f} mi' , delta = f' {((E_De/E_11) * 100):.2f}%')
+    with co3:
+        st.markdown('#### Plug-in Hybrid')
+        st.metric(label = 'In 2011', value = f'{(P_11):.2f} mi' )
+    with co4:
+        st.markdown('#### Plug-in Hybrid')
+        st.metric(label = 'in 2020', value = f'{(P_De):.2f} mi', delta = f' -27,18%')
+    
+    c1, c2, c3, c4 = st.columns(4)
+    E_19= cars[(cars['model_year']== 2019) & (cars['electric_vehicle_type']== 'Electric')]['electric_range'].mean()
+    E_Ly = cars[(cars['model_year']== 2020) & (cars['electric_vehicle_type']== 'Electric')]['electric_range'].mean()
+    P_19=cars[(cars['model_year']== 2019) & (cars['electric_vehicle_type']== 'Plug-in Hybrid')]['electric_range'].mean()
+    P_Ly= cars[(cars['model_year']== 2020) & (cars['electric_vehicle_type']== 'Plug-in Hybrid')]['electric_range'].mean()
+    
+    with c1:
+        
+        st.metric(label = 'In 2019', value = f'{(E_19):.2f} mi')
+    with c2:
+        
+        st.metric(label = 'in 2020', value =f'{(E_Ly):.2f} mi' , delta = f' 21,39%')
+    with c3:
+        
+        st.metric(label = 'In 2019', value = f'{(P_19):.2f} mi' )
+    with c4:
+        
+        st.metric(label = 'in 2020', value =f'{(P_Ly):.2f} mi', delta = f' - 11,23%')
+    
+    lep = cars[(cars['model_year']>= 2011) & (cars['model_year']<= 2020)]
+    pep = lep.groupby(['model_year', 'electric_vehicle_type'])['electric_range'].mean().reset_index()
+    st.markdown('### Area Chart')
+    plost.area_chart(data=pep, x='model_year', y='electric_range', color='electric_vehicle_type', width=800, height=500 , title='Electric Range Tendency per Type')
+if add_selectbox == 'Clean Alternative Fuel Vehicle Eligibility':
+    
+    no_unk = cars[cars['cafv_eligibilaty'] != 'Eligibility unknown as battery range has not been researched']
+    cafv_count = no_unk['cafv_eligibilaty'].value_counts()
+    d_cafv = pd.DataFrame({'cafv': cafv_count.index, 'count': cafv_count.values})
+    st.markdown('### Metrics')
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(label='CAFV Eligible', value= 18726 )
+    with col2:
+        st.metric(label="CAFV Eligible", value="67,36%")
+    with col3:
+        st.metric(label="CAFV Not Eligible", value=9072 )
+    with col4:
+        st.metric(label="CAFV Not Eligible", value="32,64%")
+    c1, c2 = st.columns((6,4))
+    with c1:
+        st.markdown('### Bar Plot')
+        plost.bar_chart(data= d_cafv, bar= 'cafv', value= 'count', color = 'count',height= 500,use_container_width = True)
+
+    with c2:
+        st.markdown('### Donut Chart')
+        plost.donut_chart(data= d_cafv,theta='count' ,color = 'cafv' ,legend= 'bottom', use_container_width = True)
+    plost.scatter_chart(
+    data=cars,
+    x='cafv_eligibilaty',
+    y='electric_range')
+
 
     
-
+    
+    
     
 
-fig, ax = plt.subplots()
-ax.bar(x=Companies[:10], height=values[:10])
-plt.figure(figsize=(9,5))
-plt.xlabel('Make')
-plt.ylabel('Count')
-st.pyplot(fig)        #plost.donut_chart(data= cars,theta='electric_vehicle_type' ,color =[len(cars[cars['electric_vehicle_type']=='Plug-in Hybrid']),len(cars[cars['electric_vehicle_type']=='Electric'])] ,legend= 'bottom', use_container_width = True)
+
+
