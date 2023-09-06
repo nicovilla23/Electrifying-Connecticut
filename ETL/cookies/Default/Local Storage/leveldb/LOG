@@ -1,0 +1,8 @@
+2023/08/04-20:13:28.994 5403 Creating DB /Users/nico/Desktop/ironhack/proyectos/Project_Music_ETL/cookies/Default/Local Storage/leveldb since it was missing.
+2023/08/04-20:13:29.078 5403 Reusing MANIFEST /Users/nico/Desktop/ironhack/proyectos/Project_Music_ETL/cookies/Default/Local Storage/leveldb/MANIFEST-000001
+2023/08/05-19:19:52.750 3203 Level-0 table #5: started
+2023/08/05-19:19:52.774 3203 Level-0 table #5: 65784 bytes OK
+2023/08/05-19:19:52.812 3203 Delete type=0 #3
+2023/08/05-19:21:14.095 3203 Level-0 table #7: started
+2023/08/05-19:21:14.121 3203 Level-0 table #7: 85839 bytes OK
+2023/08/05-19:21:14.149 3203 Delete type=0 #4

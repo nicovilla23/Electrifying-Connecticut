@@ -11,25 +11,40 @@ from streamlit_folium import st_folium
 import json
 from streamlit_lottie import st_lottie
 import requests
-st.title('Electrifying Connecticut') 
+ 
 def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return json.load(f)
+city = load_lottiefile("Lotties/city.json") 
 
+st.title('Electrifying Connecticut')
 
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-    
+st.markdown('## Project Description')
+st.markdown('For our final project we were given freedom when choosing both the topic and the assingement.') 
+             
+st.markdown('In this project I decided to create an app encouraging the people from Connecticut to buy electric cars.')
 
-lottie_coding = load_lottiefile("Lotties/city.json")  # replace link to local lottie file
-lottie_hello = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_M9p23l.json")
+project_contents = """Project contents:
+\n
+1. ETL: Extract, Transform, and Load.
+\n
+2. Database: The database I created for the extracted data.
+\n
+3. App:
+   - Streamlit code
+   - Analysis
+\n
+\n
+4. Predictive Model: A model created to predict the future population of electric cars.
 
+"""
+
+selected_option = st.selectbox('Choose from contents:', ('ETL', 'DataBase', 'App: -Finder', 'App: -Analysis', 'Predictive model'))
+st.info(project_contents)
 st_lottie(
-    lottie_coding,
-    speed=1,
-    reverse=False,
-    loop=True,
+city,
+speed=1,
+reverse=False,
+loop=True,
 )
+
