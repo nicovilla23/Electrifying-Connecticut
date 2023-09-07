@@ -1,3 +1,4 @@
+import plost
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -9,12 +10,23 @@ import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
 
-st.title('Electrifying Connecticut') 
-price = pd.read_csv('Cars_Price_Clean.csv')
+st.title('Price') 
+price = pd.read_csv('../Data/Cars_Price_Clean.csv')
+
 Prices, Models, Makes = st.columns(3)
-disable_Make = st.checkbox("Disable Make Filter", value = True)
-disable_Price = st.checkbox("Disable Price Filter")
-disable_Model = st.checkbox("Disable Model Filter", value = True)
+st.divider()
+
+st.warning('In this page you will be able to find the cars that best fit you budget')
+st.info('Click on the disable Filter boxes to be able to search by Make or model')
+c1,c2,c3 = st.columns(3)
+with c1:
+    disable_Make = st.checkbox("Disable Make Filter", value = True)
+with c2:
+
+    disable_Price = st.checkbox("Disable Price Filter")
+with c3:
+
+    disable_Model = st.checkbox("Disable Model Filter", value = True)
 if not disable_Model:
     with st.expander("Filter by Model"):
         model = st.selectbox('Select a Model', price.model.unique())
@@ -51,4 +63,5 @@ elif not disable_Model:
     var = price[(price.model == model)]
 else:
     var = price
-st.dataframe(var)
+st.dataframe(var, use_container_width=True, hide_index=True)
+st.info('The price displayed above is in american dollars  $')

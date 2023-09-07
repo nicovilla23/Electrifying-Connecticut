@@ -14,7 +14,9 @@ import matplotlib.pyplot as plt
 import squarify
 import streamlit.components.v1 as components
 
-st.title('Electrifying Connecticut') 
+
+
+
 cars = pd.read_csv('../Data/Clean_Electric_Vehicle_Population_Data.csv')
 price = pd.read_csv('../Data/Cars_Price_Clean.csv')
 stations = pd.read_csv('../Data/Clean_Charging_stations.csv')
@@ -42,8 +44,10 @@ if add_selectbox == 'Electric vs Plug-in Hybrids':
          'Tableau'),
         placeholder = 'Python')
     if selec == 'Python':
+            st.title('Electric VS Plug-in Hybrids')
+            st.divider()
             
-            st.markdown('### Metrics')
+            
             col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.metric(label="Electric", value="21.723")
@@ -53,7 +57,9 @@ if add_selectbox == 'Electric vs Plug-in Hybrids':
                 st.metric(label="Plug-in Hybrid ", value="14.559")
             with col4:
                 st.metric(label="Plug-in Hybrid ", value="40,12%")
+            st.divider()
             c1, c2 = st.columns((6,4))
+            
             with c1:
                 st.markdown('### Bar Plot')
                 plost.bar_chart(data=data, bar='Type', value='Count', color = 'Type' ,height= 500,use_container_width = True)
@@ -62,16 +68,20 @@ if add_selectbox == 'Electric vs Plug-in Hybrids':
                 st.markdown('### Donut Chart')
                 plost.donut_chart(data= data,theta='Count' ,color = 'Type' ,legend= 'bottom', use_container_width = True)
     if selec == 'Tableau':
+        st.title('Electric VS Plug-in Hybrids')
+        st.divider()
         components.html("<div class='tableauPlaceholder' id='viz1693847339356' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Libro1_16917526419450&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='es-ES' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1693847339356');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='800px';vizElement.style.maxWidth='100%';vizElement.style.minHeight='727px';vizElement.style.maxHeight=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='800px';vizElement.style.maxWidth='100%';vizElement.style.minHeight='727px';vizElement.style.maxHeight=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='927px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>",height= 1000, width= 2000)
         
 if add_selectbox == 'Electric Car Tendencies':
+    st.title('Electric Car Tendencies')
+    st.divider()
     selec= st.sidebar.selectbox(
         'Choose BI Tool',
         ('Python',
          'Tableau'),
         placeholder = 'Python')
     if selec == 'Python':
-        st.markdown('### Metrics')
+        
         colu1, colu2, colu3, colu4 = st.columns(4)
         E_12=len(cars[(cars['model_year']<= 2012) & (cars['electric_vehicle_type']== 'Electric')])
         E_DE = len(cars[(cars['model_year']<= 2022) & (cars['model_year'] >= 2010) & (cars['electric_vehicle_type']== 'Electric') ])
@@ -108,6 +118,7 @@ if add_selectbox == 'Electric Car Tendencies':
         with colo4:
 
             st.metric(label = 'Last Year', value =f' + {P_LY}', delta = f' {((P_LY/P_21) * 100):.2f}%')
+        st.divider()
 
 
         lop= cars[(cars['model_year']<= 2022) & (cars['model_year'] >= 2008) ]
@@ -119,6 +130,8 @@ if add_selectbox == 'Electric Car Tendencies':
 
        
 if add_selectbox == 'Prices per make':
+    st.title('Prices per make')
+    st.divider()
     selec= st.sidebar.selectbox(
         'Choose BI Tool',
         ('Python',
@@ -133,6 +146,7 @@ if add_selectbox == 'Prices per make':
             st.metric(label='Average Price', value = f'{(price.price.mean()):.2f}$')
         with colm3:
             st.metric(label='Maximum Price', value = f'{(price.price.max()):.2f}$')
+        
         summary = price.groupby('Make').agg(mean_price=('price', 'mean'), min_price=('price', 'min'), max_price=('price', 'max')).reset_index()
         st.markdown('### Stacked Bar Chart')
         chart = plost.bar_chart(
@@ -143,6 +157,8 @@ if add_selectbox == 'Prices per make':
     if selec == 'Tableau':
         components.html("<div class='tableauPlaceholder' id='viz1693813519906' style='position: relative'><noscript><a href='#'><img alt='Dashboard 5 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard5&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Libro1_16917526419450&#47;Dashboard5' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard5&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='es-ES' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1693813519906');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='800px';vizElement.style.minHeight='627px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='800px';vizElement.style.minHeight='627px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='777px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>", height = 1000)
 if add_selectbox == 'Most popular models':
+    st.title('Most popular models')
+    st.divider()
     selec= st.sidebar.selectbox(
         'Choose BI Tool',
         ('Python',
@@ -172,6 +188,7 @@ if add_selectbox == 'Most popular models':
             if copium in cars['model'].unique():
                 st.metric(label='Type', value=cars.loc[cars['model'] == copium, 'electric_vehicle_type'].values[0])
             lep = cars.groupby('model')['city'].count()
+        st.divider()
         lop = pd.DataFrame({'labels':lep.index,'size': lep.values})
         fig = px.treemap(lop, path=['labels'], values='size')
         fig.update_layout(
@@ -182,6 +199,8 @@ if add_selectbox == 'Most popular models':
     if selec == 'Tableau':
         components.html("<div class='tableauPlaceholder' id='viz1693832493866' style='position: relative'><noscript><a href='#'><img alt='Dashboard 12 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard12&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Libro1_16917526419450&#47;Dashboard12' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard12&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='es-ES' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1693832493866');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='800px';vizElement.style.minHeight='747px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='800px';vizElement.style.minHeight='747px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1027px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>",height=1000,width=2000)
 if add_selectbox == 'Electric Range Tendency':
+    st.title('Electric Range Tendency')
+    st.divider()
     selec= st.sidebar.selectbox(
         'Choose BI Tool',
         ('Python',
@@ -224,6 +243,7 @@ if add_selectbox == 'Electric Range Tendency':
         with c4:
 
             st.metric(label = 'in 2020', value =f'{(P_Ly):.2f} mi', delta = f' - 11,23%')
+        st.divider()
 
         lep = cars[(cars['model_year']>= 2011) & (cars['model_year']<= 2020)]
         pep = lep.groupby(['model_year', 'electric_vehicle_type'])['electric_range'].mean().reset_index()
@@ -232,6 +252,8 @@ if add_selectbox == 'Electric Range Tendency':
     if selec == 'Tableau':
         components.html("<div class='tableauPlaceholder' id='viz1693823431023' style='position: relative'><noscript><a href='#'><img alt='Dashboard 11 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard11&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Libro1_16917526419450&#47;Dashboard11' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;Libro1_16917526419450&#47;Dashboard11&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='es-ES' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1693823431023');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='800px';vizElement.style.minHeight='747px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='800px';vizElement.style.minHeight='747px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1427px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>",height= 1000, width= 2000)
 if add_selectbox == 'Clean Alternative Fuel Vehicle Eligibility':
+    st.title('Clean Alternative Fuel Vehicle Eligibility')
+    st.divider()
     selec= st.sidebar.selectbox(
         'Choose BI Tool',
         ('Python',
@@ -263,6 +285,7 @@ if add_selectbox == 'Clean Alternative Fuel Vehicle Eligibility':
         with col2:
             st.metric(label= 'Range Threshold', value = '29 miles')
         c1, c2 = st.columns((6,4))
+        
         with c1:
             plost.bar_chart(data= d_cafv, bar= 'cafv', value= 'count', color = 'count',height= 500,use_container_width = True,legend = None)
 
@@ -275,6 +298,8 @@ if add_selectbox == 'Clean Alternative Fuel Vehicle Eligibility':
 
         
 if add_selectbox == 'Predictions':
+    st.title('Future Electric Car Population')
+    st.divider()
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -290,7 +315,7 @@ if add_selectbox == 'Predictions':
         st.markdown('### Hybrid')
         st.metric(label="2025 ", value="1.621.566", delta='90.22%')
 
-   
+    st.divider()
     plost.line_chart(
     data=pred,
     x='YEAR',
